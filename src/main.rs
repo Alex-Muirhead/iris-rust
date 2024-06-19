@@ -144,6 +144,11 @@ fn main() -> ! {
         left_led_pin.set_high().unwrap();
     }
 
+    data[0] = data[0].wrapping_sub(1);
+    core::sync::atomic::compiler_fence(core::sync::atomic::Ordering::SeqCst);
+    unsafe { TEST.write_flash(&data) };
+    core::sync::atomic::compiler_fence(core::sync::atomic::Ordering::SeqCst);
+
     loop {
         cortex_m::asm::wfi();
     }
